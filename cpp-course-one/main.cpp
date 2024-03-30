@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 class Student
 {
@@ -41,14 +42,62 @@ public:
 
     void print() const
     {
-        std::cout << m_first << " " << m_last<< "\n";
+        std::cout << m_first << " " << m_last<< " ";
         std::cout << m_id << " " << m_avg<< "\n";
 
     }
 
 };
 
+//course class
 
+class Course
+{
+    std::string m_name = "Course";
+    std::vector<Student> m_students;
+
+public:
+    Course(){}
+    Course(const std::string& name)
+    : m_name(name)
+    {
+
+    }
+    //Je passe la reference car je ne veux pas copier le student dicetement
+    //mais je ne veux qu'une reference vers lui
+    void addStudent(const Student& s)
+    {
+        m_students.push_back(s);
+    }
+
+    const std::vector<Student>& getStudents() const
+    {
+        return m_students;
+    }
+
+    void print() const
+    {
+        for( const auto& s: m_students)
+        {
+            s.print();
+        }
+    }
+
+    //load student's info from file
+    void loadFromFile(const std::string filename)
+    {
+        std::ifstream fin(filename);
+        std::string first, last;
+        int id;
+        float avg;
+
+        while ( fin >> first)
+        {
+            fin >> last >> id >> avg;
+            addStudent(Student(first, last, id, avg));
+        }
+    }
+};
 
 int main(int argc, char * argv[] )
 {
@@ -71,12 +120,20 @@ int main(int argc, char * argv[] )
         std::cout << a << "\n";
     }*/
 
+    /*
     Student s1;
     Student s2("Minou", "Matoko", 1, 3.14);
-    const Student s3("hola", "Marta", 2, 3.9);
+    Student s3("hola", "Marta", 2, 3.9);
 
-    s3.print();
-    s3.getLast();
+    comp4300.addStudent(s1);
+    comp4300.addStudent(s2);
+    comp4300.addStudent(s3);
+    comp4300.addStudent(Student("Ehol", "Martin", 3, 2.6));
+    */
+
+    Course comp4300("COMP 4300");
+    comp4300.loadFromFile("../students.txt");
+    comp4300.print();
 
     return 0;
 }
