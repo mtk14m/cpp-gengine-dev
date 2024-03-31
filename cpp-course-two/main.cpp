@@ -6,30 +6,30 @@
  {
      std::cout << &a << " " << a << " "<< sizeof(a)<< "\n";
  }
-
- class IntArray
+ template <typename T>
+ class DynamicArray
  {
     size_t m_size;
-    int * m_arr;
+    T * m_arr;
  public:
      //constructor
-     IntArray(size_t size)
+     DynamicArray(size_t size)
      :  m_size(size)
-     , m_arr (new int[size])
+     , m_arr (new T[size])
      {
          std::cout << "Arrray Constructor\n";
      }
      //destructor
-     ~IntArray()
+     ~DynamicArray()
      {
          delete [] m_arr;
          std::cout << "Array destructor\n";
      }
-     int get(size_t index) const
+     T get(size_t index) const
      {
          return m_arr[index];
      }
-     void set(size_t index, int val)
+     void set(size_t index, T val)
      {
          m_arr[index] = val;
      }
@@ -39,6 +39,12 @@
          {
              std::cout << i << " " << m_arr[i] << "\n";
          }
+     }
+
+     //operator overwriting
+     T & operator [](size_t index)
+     {
+         return m_arr[index];
      }
  };
 
@@ -68,10 +74,14 @@ int main()
   */
 
   //IntArray
-  IntArray myArray(10);
+  DynamicArray<float> myArray(10);
   //set
-  myArray.set(4, 7);
-  myArray.set(2, 152);
+  myArray.set(4, 7.8);
+  myArray.set(2, 152.365);
+
+  //overwritting operator
+  myArray[3] = 3.14159;
+  myArray[5] = 2.784;
 
   myArray.print();
   return 0;
